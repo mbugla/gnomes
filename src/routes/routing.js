@@ -24,6 +24,19 @@ router.post('/gnomes', asyncMiddleware(async (req, res, next) => {
     });
 }));
 
+
+router.put('/gnomes/:id', asyncMiddleware(async (req, res, next) => {
+  const updatedGnome = await controller.updateGnome(req.params.id, req.body);
+
+  res
+    .status(200)
+    .json({
+      message: 'Gnome updated',
+      payload: updatedGnome.toJSON(),
+    });
+}));
+
+
 router.use((err, req, res, next) => {
   if (Object.prototype.isPrototypeOf.call(ApiError.prototype, err)) {
     return res.status(err.status || 500).json({ error: err.message });

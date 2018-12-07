@@ -8,6 +8,26 @@ async function addGnome(post) {
   return post;
 }
 
+async function updateGnome(gnomeData) {
+  if (!gnomeData.id) {
+    throw new ApiError('Missing gnome id', 400);
+  }
+
+  const gnomeId = gnomeData.id;
+  const storedGnome = gnomes.find(gnomeObj => gnomeId === gnomeObj.id);
+
+  if (!storedGnome) {
+    throw new ApiError(`Missing gnome with id: ${gnomeId}`, 404);
+  }
+
+  storedGnome.name = gnomeData.name ? gnomeData.name : storedGnome.name;
+  storedGnome.strength = gnomeData.strength ? gnomeData.strength : storedGnome.strength;
+  storedGnome.age = gnomeData.age ? gnomeData.age : storedGnome.age;
+  storedGnome.avatar = gnomeData.avatar ? gnomeData.avatar : storedGnome.avatar;
+
+  return storedGnome;
+}
+
 async function getGnomeById(gnomeId) {
   const storedGnome = gnomes.find(gnome => gnome.id === gnomeId);
 
@@ -37,4 +57,5 @@ module.exports = {
   getGnomes,
   addGnome,
   removeGnomeById,
+  updateGnome,
 };

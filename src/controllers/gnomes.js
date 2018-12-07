@@ -7,6 +7,14 @@ async function getGnomes() {
   return result;
 }
 
+async function updateGnome(gnomeId, requestBody) {
+  const data = requestBody;
+  data.id = gnomeId;
+  const result = await repository.updateGnome(data);
+
+  return result;
+}
+
 async function addGnome(requestBody) {
   const gnome = Gnome.fromRequestBody(requestBody);
   await repository.addGnome(gnome);
@@ -24,9 +32,11 @@ async function removeGnomeById(gnomeId) {
   await repository.removeGnomeById(gnomeId);
 }
 
+
 module.exports = {
   getGnomes,
   addGnome,
   getGnomeById,
   removeGnomeById,
+  updateGnome,
 };

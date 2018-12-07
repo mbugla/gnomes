@@ -18,6 +18,7 @@ describe('Gnomes Repository', () => {
   it('allows to retreive single gnome', async () => {
     await repository.addGnome(new Gnome('456', 'UrukShak', 99, 20, 'uruk.png'));
     const retreivedGnome = await repository.getGnomeById('123');
+
     expect(retreivedGnome.toJSON()).toEqual({
       id: '123',
       name: 'UrukShak',
@@ -36,5 +37,16 @@ describe('Gnomes Repository', () => {
     await repository.removeGnomeById('123');
     const retreivedGnomes = await repository.getGnomes();
     expect(retreivedGnomes).toHaveLength(1);
+  });
+
+  it('allows to update gnome', async () => {
+    await repository.addGnome(new Gnome('abcd', 'UrukShak', 99, 20, 'uruk.png'));
+    const gnomeData = { id: 'abcd', name: 'Nu bu dan', age: 40 };
+
+    const updatedGnome = await repository.updateGnome(gnomeData);
+
+    expect(updatedGnome.name).toEqual('Nu bu dan');
+    expect(updatedGnome.age).toEqual(40);
+    expect(updatedGnome.strength).toEqual(99);
   });
 });
