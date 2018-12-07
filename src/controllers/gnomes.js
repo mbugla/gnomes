@@ -32,11 +32,18 @@ async function removeGnomeById(gnomeId) {
   await repository.removeGnomeById(gnomeId);
 }
 
+async function updateAvatar(gnomeId, filename) {
+  const gnome = await repository.updateGnome({ id: gnomeId, avatar: filename });
+
+  return gnome;
+}
+
 
 module.exports = {
   getGnomes,
   addGnome,
   getGnomeById,
   removeGnomeById,
+  updateAvatar,
   updateGnome,
 };

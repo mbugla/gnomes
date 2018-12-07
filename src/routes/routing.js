@@ -1,5 +1,23 @@
 const express = require('express');
+const multer = require('multer');
+const crypto = require('crypto');
+
 const { ApiError } = require('../exceptions/api');
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, './public/avatars/');
+    },
+    filename: (req, file, cb) => {
+      const customFileName = crypto.randomBytes(18).toString('hex');
+
+
+      const fileExtension = file.originalname.split('.')[1]; // get file extension from original file name
+      cb(null, `${customFileName}.${fileExtension}`);
+    },
+  }),
+});
 
 const router = express.Router();
 const controller = require('../controllers/gnomes');
@@ -32,6 +50,17 @@ router.post('/gnomes', asyncMiddleware(async (req, res, next) => {
     });
 }));
 
+
+router.post('/gnomes/:id/avatar', upload.single('avatar'), asyncMiddleware(async (req, res, next) => {
+  const gnome = await controller.updateAvatar(req.params.id, req.file.filename);
+
+  res
+    .status(201)
+    .json({
+      message: 'Avatar updated',
+      payload: gnome.toJSON(),
+    });
+}));
 
 router.put('/gnomes/:id', asyncMiddleware(async (req, res, next) => {
   const updatedGnome = await controller.updateGnome(req.params.id, req.body);
@@ -72,5 +101,6 @@ router.use((err, req, res, next) => {
 
   return res.status(500).json({ error: 'Something goes wrong :(' });
 });
+
 
 module.exports = router;
