@@ -176,6 +176,24 @@ describe('App', () => {
       });
   });
 
+  it('gets gnomes', (done) => {
+    request(app)
+      .get('/gnomes')
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body).toEqual({
+          payload: [{
+            id: '81d18e4a-45dd-4bcf-b79b-2abd8b932663',
+            name: 'ZeRok',
+            strength: 30,
+            age: 30,
+            avatar: 'zerok.jpg',
+          }],
+        });
+        done();
+      });
+  });
+
   it('returns error on non existent gnome', (done) => {
     request(app)
       .get('/gnomes/non-existing-id')
@@ -183,6 +201,33 @@ describe('App', () => {
       .end((err, res) => {
         expect(res.body).toEqual({
           error: 'Missing gnome with id: non-existing-id',
+        });
+        done();
+      });
+  });
+
+  it('remove post', (done) => {
+    const server = request(app);
+    server
+      .delete('/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
+      .expect(204)
+      .end(() => {
+        server
+          .get('/gnomes')
+          .end((err, res) => {
+            expect(res.body.payload).toHaveLength(0);
+            done();
+          });
+      });
+  });
+
+  it('returns 404 when try to delete not existing gnome', (done) => {
+    request(app)
+      .delete('/gnomes/not-existing-id')
+      .expect(404)
+      .end((err, res) => {
+        expect(res.body).toEqual({
+          error: 'Missing gnome with id: not-existing-id',
         });
         done();
       });

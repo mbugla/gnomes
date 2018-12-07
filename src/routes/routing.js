@@ -11,7 +11,15 @@ const asyncMiddleware = fn => (req, res, next) => {
 
 router.get('/', asyncMiddleware(async (req, res, next) => res.status(200).json({ msg: 'Hello from gnomes app' })));
 
-router.get('/gnomes', asyncMiddleware(async (req, res, next) => res.status(200).json({ msg: 'Gnome 3' })));
+router.get('/gnomes', asyncMiddleware(async (req, res) => {
+  const gnomes = await controller.getGnomes();
+
+  res
+    .status(200)
+    .json({
+      payload: gnomes,
+    });
+}));
 
 router.post('/gnomes', asyncMiddleware(async (req, res, next) => {
   const createdGnome = await controller.addGnome(req.body);
@@ -43,6 +51,16 @@ router.get('/gnomes/:id', asyncMiddleware(async (req, res, next) => {
     .status(200)
     .json({
       payload: gnome.toJSON(),
+    });
+}));
+
+router.delete('/gnomes/:id', asyncMiddleware(async (req, res, next) => {
+  await controller.removeGnomeById(req.params.id);
+
+  res
+    .status(204)
+    .json({
+      message: 'Gnome deleted',
     });
 }));
 
