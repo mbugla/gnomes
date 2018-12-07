@@ -15,5 +15,4 @@ app.use((req, res) => {
 
 app.listen(port);
 
-console.log('im here');
 module.exports = app;
