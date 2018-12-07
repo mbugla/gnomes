@@ -30,9 +30,10 @@
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.js",
-      "!src/**/index.js"
+      "!src/**/app.js"
     ],
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "testEnvironment": "node",
     "moduleFileExtensions": [
       "ts",
       "tsx",
