@@ -36,6 +36,16 @@ router.put('/gnomes/:id', asyncMiddleware(async (req, res, next) => {
     });
 }));
 
+router.get('/gnomes/:id', asyncMiddleware(async (req, res, next) => {
+  const gnome = await controller.getGnomeById(req.params.id);
+
+  res
+    .status(200)
+    .json({
+      payload: gnome.toJSON(),
+    });
+}));
+
 
 router.use((err, req, res, next) => {
   if (Object.prototype.isPrototypeOf.call(ApiError.prototype, err)) {

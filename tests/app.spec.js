@@ -157,4 +157,34 @@ describe('App', () => {
         done();
       });
   });
+
+  it('gets gnome', (done) => {
+    request(app)
+      .get('/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body).toEqual({
+          payload: {
+            id: '81d18e4a-45dd-4bcf-b79b-2abd8b932663',
+            name: 'ZeRok',
+            strength: 30,
+            age: 30,
+            avatar: 'zerok.jpg',
+          },
+        });
+        done();
+      });
+  });
+
+  it('returns error on non existent gnome', (done) => {
+    request(app)
+      .get('/gnomes/non-existing-id')
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body).toEqual({
+          error: 'Missing gnome with id: non-existing-id',
+        });
+        done();
+      });
+  });
 });
