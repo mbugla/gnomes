@@ -3,6 +3,10 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const bodyParser = require('body-parser');
+const validate = require('express-validator');
+
+app.use(validate());
+
 const router = require('./routes/routing');
 
 app.use(bodyParser.json());

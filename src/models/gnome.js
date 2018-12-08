@@ -10,7 +10,7 @@ class Gnome {
   }
 
   static fromRequestBody(body) {
-    return new this(v4(), body.name, body.strength, body.age, body.avatar);
+    return new this(v4(), body.name, body.strength, body.age, 'default.png');
   }
 
   toJSON() {
