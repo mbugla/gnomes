@@ -1,5 +1,5 @@
 # gnomes
-Gnomes app in dockerized nodejs + mongodb
+Gnomes app in dockerized nodejs
 
 How to run:
 
