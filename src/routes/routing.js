@@ -1,22 +1,19 @@
 const express = require('express');
-
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../swagger/swagger.json');
 const { ApiError } = require('../exceptions/api');
-
 const { upload } = require('../services/upload');
 const { createGnomeSchema, updateGnomeSchema } = require('../validations/gnomes');
 
 const router = express.Router();
-
 const controller = require('../controllers/gnomes');
-
 
 const asyncMiddleware = fn => (req, res, next) => {
   Promise.resolve(fn(req, res, next))
     .catch(next);
 };
 
-
-router.get('/', asyncMiddleware(async (req, res, next) => res.status(200).json({ msg: 'Hello from gnomes app' })));
+router.get('/', asyncMiddleware(async (req, res, next) => res.status(200).json({ msg: 'Welcome in gnomes app api. Check /api-docs endpoint for documentation' })));
 
 router.get('/gnomes', asyncMiddleware(async (req, res) => {
   const gnomes = await controller.getGnomes();
@@ -93,6 +90,7 @@ router.delete('/gnomes/:id', asyncMiddleware(async (req, res, next) => {
     });
 }));
 
+router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 router.use((err, req, res, next) => {
   if (Object.prototype.isPrototypeOf.call(ApiError.prototype, err)) {

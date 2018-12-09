@@ -1,0 +1,339 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Gnomes Application API",
+      "description": "Gnomes Application API",
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "host": "localhost:3000",
+    "basePath": "/api/v1",
+    "tags": [
+      {
+        "name": "Gnomes",
+        "description": "API for gnomes in the system"
+      }
+    ],
+    "schemes": [
+      "http"
+    ],
+    "consumes": [
+      "application/json"
+    ],
+    "produces": [
+      "application/json"
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "tags": ["Welcome"],
+                "description": "Welcome page",
+                "produces": [
+                    "application/json"
+                ],
+                "responses":{
+                    "200": {
+                        "description": "Welcome page info",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "msg": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+      "/gnomes": {
+        "post": {
+          "tags": [
+            "Gnomes"
+          ],
+          "description": "Create new gnome in system",
+          "parameters": [
+            {
+              "name": "gnome",
+              "in": "body",
+              "description": "Gnome that we want to create",
+              "schema": {
+                "$ref": "#/definitions/CreateGnomeRequest"
+              }
+            }
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "201": {
+              "description": "New gnome is created",
+              "schema": {
+                  "type": "object",
+                "$ref": "#/definitions/GnomeResponse"
+              }
+            },
+            "400": {
+                "description": "Validation error",
+                "schema": {
+                    "type": "object",
+                    "$ref": "#/definitions/GnomeValidationError"
+                }
+            }
+          }
+        },
+        "get": {
+          "tags": [
+            "Gnomes"
+          ],
+          "summary": "Get all gnomes in system",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/definitions/Gnomes"
+              }
+            }
+          }
+        }
+      },
+      "/gnomes/{gnomeId}": {
+        "parameters": [
+          {
+            "name": "gnomeId",
+            "in": "path",
+            "required": true,
+            "description": "ID of gnome that we want to find",
+            "type": "string"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Gnomes"
+          ],
+          "summary": "Get gnome with given ID",
+          "responses": {
+            "200": {
+              "description": "Gnome is found",
+              "schema": {
+                "$ref": "#/definitions/Gnome"
+              }
+            },
+            "404": {
+                "description" : "Gnome not found",
+                "schema": {
+                    "type": "object",
+                    "$ref": "#/definitions/CommonError"
+                }
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete gnome with given ID",
+          "tags": [
+            "Gnomes"
+          ],
+          "responses": {
+            "204": {
+              "description": "Gnome is deleted"
+            }
+          }
+        },
+        "put": {
+          "summary": "Update gnome with given ID",
+          "tags": [
+            "Gnomes"
+          ],
+          "parameters": [
+            {
+              "name": "gnome",
+              "in": "body",
+              "description": "Gnome with new values of properties",
+              "schema": {
+                "$ref": "#/definitions/UpdateGnomeRequest"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Gnome is updated",
+              "schema": {
+                "$ref": "#/definitions/Gnome"
+              }
+            },
+            "400": {
+                "description": "Validation error",
+                "schema": {
+                    "type": "object",
+                    "$ref": "#/definitions/GnomeValidationError"
+                }
+            }
+          }
+        }
+      },
+      "/gnomes/{gnomeId}/avatar": {
+        "parameters": [
+          {
+            "name": "gnomeId",
+            "in": "path",
+            "required": true,
+            "description": "ID of gnome that we want to find",
+            "type": "string"
+          }
+        ],
+        "post": {
+            "tags": [
+              "Gnomes"
+            ],
+            "description": "Create new gnome in system",
+            "parameters": [
+                {
+                    "name": "avatar",
+                    "in": "formData",
+                    "description": "avatar file to upload",
+                    "required": true,
+                    "type": "file"
+                }
+            ],
+            "consumes": [
+                "multipart/form-data"
+              ],
+            "produces": [
+              "application/json"
+            ],
+            "responses": {
+              "201": {
+                "description": "New gnome avatar is created",
+                "schema": {
+                    "type": "object",
+                  "$ref": "#/definitions/GnomeResponse"
+                }
+              },
+              "400": {
+                  "description": "Validation error",
+                  "schema": {
+                      "type": "object",
+                      "$ref": "#/definitions/CommonError"
+                  }
+              }
+            }
+          }
+        }
+    },
+    "definitions": {
+        "CommonError": {
+            "type": "object",
+            "properties": {
+                "error":  {
+                    "type":"string"
+                }
+            }
+        },
+      "GnomeResponse": {
+        "type": "object",
+        "properties": {
+            "message": {
+                "type": "string"
+            },
+            "payload": {
+                "$ref": "#/definitions/Gnome"
+            }
+        }
+      },
+      "CreateGnomeRequest": {
+        "required": [
+          "name",
+          "strength",
+          "age"
+        ],
+        "properties": {   
+          "name": {
+            "type": "string",
+            "uniqueItems": false
+          },
+          "strength": {
+            "type": "integer",
+            "min": 0,
+            "max": 100
+          },
+          "age": {
+            "type": "integer"
+          }
+        }
+      },
+      "UpdateGnomeRequest": {
+        "properties": {   
+          "name": {
+            "type": "string",
+            "uniqueItems": false
+          },
+          "strength": {
+            "type": "integer"
+          },
+          "age": {
+            "type": "integer"
+          }
+        }
+      },
+      "Gnome": {
+        "type": "object",
+        "properties": {
+          "id": {
+              "type": "string",
+              "uniqueItems": true
+            },
+            "name": {
+              "type": "string",
+              "uniqueItems": false
+            },
+            "strength": {
+              "type": "integer"
+            },
+            "age": {
+              "type": "integer"
+            },
+            "avatar": {
+              "type": "string"
+            }
+        }  
+      },
+      "Gnomes": {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "$ref": "#/definitions/Gnome"
+        }
+      },
+      "GnomeValidationError": {
+          "type": "object",
+          "properties":{
+            "error": {
+                "$ref": "#/definitions/ValidationErrorDetails"
+            }
+          }
+      },
+      "ValidationErrorDetails": {
+          "type": "object",
+          "properties": {
+            "isJoi": {
+                "type": "boolean"
+            },
+            "name": {
+                "type": "string"
+            },
+            "details": {
+                "type": "array",
+                "items": {
+                    "type": "object"
+                }
+            },
+            "_object": {
+                "type": "object"
+            }
+          }
+      }
+    }
+  }

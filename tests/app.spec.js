@@ -5,15 +5,15 @@ jest.mock('uuid', () => ({
 const request = require('supertest');
 const app = require('../src/app');
 
+
 describe('App', () => {
   it('creates gnomes', (done) => {
     request(app)
-      .post('/gnomes')
+      .post('/api/v1/gnomes')
       .send({
         name: 'RukShak',
         strength: 100,
         age: 20,
-        avatar: 'default.png',
       })
       .end((err, res) => {
         expect(res.body).toEqual({
@@ -32,12 +32,11 @@ describe('App', () => {
 
   it('update gnome all field', (done) => {
     request(app)
-      .put('/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
+      .put('/api/v1/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
       .send({
         name: 'RukShakur',
         strength: 100,
         age: 21,
-        avatar: 'shakur.jpg',
       })
       .expect(200)
       .end((err, res) => {
@@ -48,7 +47,7 @@ describe('App', () => {
             name: 'RukShakur',
             strength: 100,
             age: 21,
-            avatar: 'shakur.jpg',
+            avatar: 'default.png',
           },
         });
         done();
@@ -57,7 +56,7 @@ describe('App', () => {
 
   it('update gnome name', (done) => {
     request(app)
-      .put('/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
+      .put('/api/v1/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
       .send({
         name: 'ZeRok',
       })
@@ -70,7 +69,7 @@ describe('App', () => {
             name: 'ZeRok',
             strength: 100,
             age: 21,
-            avatar: 'shakur.jpg',
+            avatar: 'default.png',
           },
         });
         done();
@@ -79,7 +78,7 @@ describe('App', () => {
 
   it('update gnome strength', (done) => {
     request(app)
-      .put('/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
+      .put('/api/v1/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
       .send({
         strength: 30,
       })
@@ -92,7 +91,7 @@ describe('App', () => {
             name: 'ZeRok',
             strength: 30,
             age: 21,
-            avatar: 'shakur.jpg',
+            avatar: 'default.png',
           },
         });
         done();
@@ -101,7 +100,7 @@ describe('App', () => {
 
   it('update gnome age', (done) => {
     request(app)
-      .put('/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
+      .put('/api/v1/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
       .send({
         age: 30,
       })
@@ -114,29 +113,7 @@ describe('App', () => {
             name: 'ZeRok',
             strength: 30,
             age: 30,
-            avatar: 'shakur.jpg',
-          },
-        });
-        done();
-      });
-  });
-
-  it('update gnome avatar', (done) => {
-    request(app)
-      .put('/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
-      .send({
-        avatar: 'zerok.jpg',
-      })
-      .expect(200)
-      .end((err, res) => {
-        expect(res.body).toEqual({
-          message: 'Gnome updated',
-          payload: {
-            id: '81d18e4a-45dd-4bcf-b79b-2abd8b932663',
-            name: 'ZeRok',
-            strength: 30,
-            age: 30,
-            avatar: 'zerok.jpg',
+            avatar: 'default.png',
           },
         });
         done();
@@ -145,7 +122,7 @@ describe('App', () => {
 
   it('return error on update non existing gnome', (done) => {
     request(app)
-      .put('/gnomes/non-existing-id')
+      .put('/api/v1/gnomes/non-existing-id')
       .send({
         strength: 30,
       })
@@ -160,7 +137,7 @@ describe('App', () => {
 
   it('gets gnome', (done) => {
     request(app)
-      .get('/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
+      .get('/api/v1/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
       .expect(200)
       .end((err, res) => {
         expect(res.body).toEqual({
@@ -169,7 +146,7 @@ describe('App', () => {
             name: 'ZeRok',
             strength: 30,
             age: 30,
-            avatar: 'zerok.jpg',
+            avatar: 'default.png',
           },
         });
         done();
@@ -178,7 +155,7 @@ describe('App', () => {
 
   it('gets gnomes', (done) => {
     request(app)
-      .get('/gnomes')
+      .get('/api/v1/gnomes')
       .expect(200)
       .end((err, res) => {
         expect(res.body).toEqual({
@@ -187,7 +164,7 @@ describe('App', () => {
             name: 'ZeRok',
             strength: 30,
             age: 30,
-            avatar: 'zerok.jpg',
+            avatar: 'default.png',
           }],
         });
         done();
@@ -196,7 +173,7 @@ describe('App', () => {
 
   it('returns error on non existent gnome', (done) => {
     request(app)
-      .get('/gnomes/non-existing-id')
+      .get('/api/v1/gnomes/non-existing-id')
       .expect(200)
       .end((err, res) => {
         expect(res.body).toEqual({
@@ -209,11 +186,11 @@ describe('App', () => {
   it('remove post', (done) => {
     const server = request(app);
     server
-      .delete('/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
+      .delete('/api/v1/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
       .expect(204)
       .end(() => {
         server
-          .get('/gnomes')
+          .get('/api/v1/gnomes')
           .end((err, res) => {
             expect(res.body.payload).toHaveLength(0);
             done();
@@ -223,7 +200,7 @@ describe('App', () => {
 
   it('returns 404 when try to delete not existing gnome', (done) => {
     request(app)
-      .delete('/gnomes/not-existing-id')
+      .delete('/api/v1/gnomes/not-existing-id')
       .expect(404)
       .end((err, res) => {
         expect(res.body).toEqual({
