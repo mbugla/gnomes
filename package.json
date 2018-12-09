@@ -14,7 +14,9 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "express-validator": "^5.3.0",
+    "joi": "^14.3.0",
     "multer": "^1.4.1",
+    "swagger-ui-express": "^4.0.1",
     "uuid": "^3.2.1"
   },
   "devDependencies": {
@@ -30,9 +32,10 @@
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.js",
-      "!src/**/index.js"
+      "!src/**/app.js"
     ],
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "testEnvironment": "node",
     "moduleFileExtensions": [
       "ts",
       "tsx",
