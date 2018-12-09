@@ -31,6 +31,52 @@ describe('App', () => {
       });
   });
 
+  it('return validation errors on invalid strength value', (done) => {
+    request(app)
+      .post('/api/v1/gnomes')
+      .send({
+        name: 'RukShak',
+        strength: 101,
+        age: 20,
+      })
+      .expect(400)
+      .end(() => {
+        expect.anything();
+        done();
+      });
+  });
+
+  it('return validation errors on invalid age value', (done) => {
+    request(app)
+      .post('/api/v1/gnomes')
+      .send({
+        name: 'RukShak',
+        strength: 100,
+        age: 1002,
+      })
+      .expect(400)
+      .end(() => {
+        expect.anything();
+        done();
+      });
+  });
+
+  it('return validation errors on try to modify avatar', (done) => {
+    request(app)
+      .post('/api/v1/gnomes')
+      .send({
+        name: 'RukShak',
+        strength: 100,
+        age: 100,
+        avatar: 'avatar.png',
+      })
+      .expect(400)
+      .end(() => {
+        expect.anything();
+        done();
+      });
+  });
+
   it('update gnome all field', (done) => {
     request(app)
       .put('/api/v1/gnomes/81d18e4a-45dd-4bcf-b79b-2abd8b932663')
