@@ -5,6 +5,7 @@ jest.mock('uuid', () => ({
 const request = require('supertest');
 const app = require('../src/app');
 
+afterAll(() => setTimeout(() => process.exit(), 1000));
 
 describe('App', () => {
   it('creates gnomes', (done) => {
